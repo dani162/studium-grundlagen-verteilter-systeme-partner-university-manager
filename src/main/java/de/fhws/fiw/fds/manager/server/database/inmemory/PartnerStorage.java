@@ -36,6 +36,20 @@ public class PartnerStorage extends AbstractInMemoryStorage<Partner> implements 
                 LocalDate.of(2024, 1, 1),
                 LocalDate.of(2024, 7, 1)
         ));
+
+        for (int i = 0; i < 100; i++) {
+            create(new Partner(
+                    "Sample " + i,
+                    "Country " + i,
+                    "Department " + i,
+                    "url " + i,
+                    "contact person " + i,
+                    i,
+                    i + 1,
+                    LocalDate.of(2024, 1, 1),
+                    LocalDate.of(2024, 7, 1)
+            ));
+        }
     }
 
     private Predicate<Partner> byPartnerNameAndCountry(String partnerName, String country) {
