@@ -1,0 +1,25 @@
+meta {
+  name: createPartner
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{url}}/partners
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+      "name": "Technical University of Applied Sciences Würzburg-Schweinfurt",
+      "country": "Germany",
+      "department": "Computer Science and Business Information Systems",
+      "website": "https://thws.de/",
+      "contactPerson": "Prof. Dr. Peter Braun",
+      "numberOfSendableStudents": 15,
+      "numberOfAcceptableStudents": 15,
+      "startOfNextSpringSemester": "2024-01-01",
+      "startOfNextAutumnSemester": "2024-07-01"
+  }
+}

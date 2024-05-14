@@ -1,0 +1,9 @@
+{
+  "version": "1",
+  "name": "partner-university-manager",
+  "type": "collection",
+  "ignore": [
+    "node_modules",
+    ".git"
+  ]
+}
