@@ -26,7 +26,7 @@ import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
-@Path("persons")
+@Path(PersonUri.PATH_ELEMENT)
 public class PersonJerseyService extends AbstractJerseyService {
 
     public PersonJerseyService() {
