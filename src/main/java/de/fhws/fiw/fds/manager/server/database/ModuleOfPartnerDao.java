@@ -1,10 +1,9 @@
 package de.fhws.fiw.fds.manager.server.database;
 
-import de.fhws.fiw.fds.manager.Start;
-import de.fhws.fiw.fds.manager.server.api.states.partner.PartnerUri;
+import de.fhws.fiw.fds.manager.server.api.models.Module;
+import de.fhws.fiw.fds.sutton.server.database.IDatabaseRelationAccessObject;
 
-import static de.fhws.fiw.fds.manager.Constants.APPLICATION_PATH;
 
-public interface ModuleOfPartnerDao {
+public interface ModuleOfPartnerDao extends IDatabaseRelationAccessObject<Module> {
 
 }

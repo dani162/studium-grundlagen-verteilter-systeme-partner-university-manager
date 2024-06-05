@@ -1,7 +1,6 @@
 package de.fhws.fiw.fds.manager;
 
 import de.fhws.fiw.fds.manager.server.api.services.DispatcherJerseyService;
-import de.fhws.fiw.fds.manager.server.api.services.ModuleJerseyService;
 import de.fhws.fiw.fds.manager.server.api.services.PartnerJerseyService;
 import de.fhws.fiw.fds.sutton.server.api.AbstractJerseyApplication;
 import jakarta.ws.rs.ApplicationPath;
@@ -24,7 +23,6 @@ public class SuttonManagerApplication extends AbstractJerseyApplication {
 
         returnValue.add(DispatcherJerseyService.class);
         returnValue.add(PartnerJerseyService.class);
-        returnValue.add(ModuleJerseyService.class);
 
         return returnValue;
     }

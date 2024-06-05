@@ -2,7 +2,9 @@ package de.fhws.fiw.fds.manager.server.api.services;
 
 import de.fhws.fiw.fds.manager.server.api.models.Partner;
 import de.fhws.fiw.fds.manager.server.api.queries.QueryByPartnerNameAndCountry;
+import de.fhws.fiw.fds.manager.server.api.queries.QueryModuleOfPartner;
 import de.fhws.fiw.fds.manager.server.api.states.partner.*;
+import de.fhws.fiw.fds.manager.server.api.states.partner_modules.GetAllModulesOfPartner;
 import de.fhws.fiw.fds.sutton.server.api.serviceAdapters.Exceptions.SuttonWebAppException;
 import de.fhws.fiw.fds.sutton.server.api.services.AbstractJerseyService;
 import jakarta.ws.rs.*;
@@ -73,6 +75,27 @@ public class PartnerJerseyService extends AbstractJerseyService {
         } catch (SuttonWebAppException e) {
             throw new WebApplicationException(Response.status(e.getStatus().getCode())
                     .entity(e.getExceptionMessage()).build());
+        }
+    }
+
+    // ModuleOfPartner
+    @GET
+    @Path("{partnerId:\\d}/modules")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getModuleOfPartner(
+            @PathParam("partnerId") final long partnerId,
+            @DefaultValue("0") @QueryParam("offset") int offset,
+            @DefaultValue("20") @QueryParam("size") int size
+    ) {
+        try {
+            return new GetAllModulesOfPartner(
+                    this.serviceContext, partnerId,
+                    new QueryModuleOfPartner<>(partnerId, offset, size)
+            ).execute();
+        } catch (SuttonWebAppException e) {
+            throw new WebApplicationException(
+                    Response.status(e.getStatus().getCode()).entity(e.getExceptionMessage()).build()
+            );
         }
     }
     

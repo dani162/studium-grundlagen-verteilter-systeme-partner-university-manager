@@ -1,6 +1,7 @@
 package de.fhws.fiw.fds.manager.server.database;
 
 import de.fhws.fiw.fds.manager.server.database.inmemory.ModuleOfPartnerStorage;
+import de.fhws.fiw.fds.manager.server.database.inmemory.ModuleStorage;
 import de.fhws.fiw.fds.manager.server.database.inmemory.PartnerStorage;
 
 public class DaoFactory {
@@ -15,15 +16,21 @@ public class DaoFactory {
     }
 
     private final PartnerDao partnerDao;
+    private final ModuleDao moduleDao;
     private final ModuleOfPartnerDao moduleOfPartnerDao;
 
     private DaoFactory() {
         this.partnerDao = new PartnerStorage();
-        this.moduleOfPartnerDao = new ModuleOfPartnerStorage();
+        this.moduleDao = new ModuleStorage();
+        this.moduleOfPartnerDao = new ModuleOfPartnerStorage(this.moduleDao);
     }
 
     public PartnerDao getPartnerDao() {
         return partnerDao;
+    }
+
+    public ModuleDao getModuleDao() {
+        return moduleDao;
     }
 
     public ModuleOfPartnerDao getModuleOfPartnerDao() {

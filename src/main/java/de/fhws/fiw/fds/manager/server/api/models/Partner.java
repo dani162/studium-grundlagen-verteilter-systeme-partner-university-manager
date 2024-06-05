@@ -2,7 +2,6 @@ package de.fhws.fiw.fds.manager.server.api.models;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonRootName;
-import de.fhws.fiw.fds.manager.server.api.states.partner.PartnerRelTypes;
 import de.fhws.fiw.fds.manager.server.api.states.partner.PartnerUri;
 import de.fhws.fiw.fds.manager.server.api.states.partner_modules.ModuleOfPartnerRelTypes;
 import de.fhws.fiw.fds.manager.server.api.states.partner_modules.ModuleOfPartnerUri;
