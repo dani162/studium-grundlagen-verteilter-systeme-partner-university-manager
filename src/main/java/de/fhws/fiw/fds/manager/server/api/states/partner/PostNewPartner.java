@@ -21,6 +21,5 @@ public class PostNewPartner extends AbstractPostState<Response, Partner> {
 
     @Override
     protected void defineTransitionLinks() {
-
     }
 }
