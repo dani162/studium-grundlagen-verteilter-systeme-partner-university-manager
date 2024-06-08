@@ -12,7 +12,7 @@ import java.util.Set;
 import static de.fhws.fiw.fds.manager.Constants.APPLICATION_PATH;
 
 @ApplicationPath(APPLICATION_PATH)
-public class SuttonManagerApplication extends AbstractJerseyApplication {
+public class SuttonManagerJerseyApplication extends AbstractJerseyApplication {
 
     @Override
     protected Set<Class<?>> getServiceClasses() {
