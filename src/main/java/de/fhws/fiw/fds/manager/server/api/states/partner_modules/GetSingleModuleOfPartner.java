@@ -28,11 +28,12 @@ public class GetSingleModuleOfPartner extends AbstractGetRelationState<Response,
 
     @Override
     protected void defineTransitionLinks() {
-        addLink(ModuleOfPartnerUri.REL_PATH,
-                ModuleOfPartnerRelTypes.GET_ALL_MODULES_OF_PARTNER,
-                getAcceptRequestHeader(),
-                this.primaryId
-        );
+        addLink(ModuleOfPartnerUri.REL_PATH, ModuleOfPartnerRelTypes.GET_ALL_MODULES_OF_PARTNER, getAcceptRequestHeader(),
+                this.primaryId);
+        addLink(ModuleOfPartnerUri.REL_PATH_ID, ModuleOfPartnerRelTypes.DELETE_SINGLE_MODULE_OF_PARTNER, getAcceptRequestHeader(),
+                this.primaryId, this.requestedId);
+        addLink(ModuleOfPartnerUri.REL_PATH_ID, ModuleOfPartnerRelTypes.UPDATE_SINGLE_MODULE_OF_PARTNER, getAcceptRequestHeader(),
+                this.primaryId, this.requestedId);
     }
 
     private boolean isModuleOfPartner() {

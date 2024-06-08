@@ -1,10 +1,11 @@
 package de.fhws.fiw.fds.manager.server.api.services;
 
+import de.fhws.fiw.fds.manager.server.api.models.Module;
 import de.fhws.fiw.fds.manager.server.api.models.Partner;
 import de.fhws.fiw.fds.manager.server.api.queries.QueryByPartnerNameAndCountry;
 import de.fhws.fiw.fds.manager.server.api.queries.QueryModuleOfPartner;
 import de.fhws.fiw.fds.manager.server.api.states.partner.*;
-import de.fhws.fiw.fds.manager.server.api.states.partner_modules.GetAllModulesOfPartner;
+import de.fhws.fiw.fds.manager.server.api.states.partner_modules.*;
 import de.fhws.fiw.fds.sutton.server.api.serviceAdapters.Exceptions.SuttonWebAppException;
 import de.fhws.fiw.fds.sutton.server.api.services.AbstractJerseyService;
 import jakarta.ws.rs.*;
@@ -31,7 +32,7 @@ public class PartnerJerseyService extends AbstractJerseyService {
 
     @GET
     @Path("{id: \\d+}")
-    @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+    @Produces({MediaType.APPLICATION_JSON})
     public Response getSinglePartner(@PathParam("id") final long id) {
         try {
             return new GetSinglePartner(this.serviceContext, id).execute();
@@ -44,7 +45,7 @@ public class PartnerJerseyService extends AbstractJerseyService {
     }
     
     @POST
-    @Consumes({MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON})
     public Response createSinglePartner(final Partner partnerModel) {
         try {
             return new PostNewPartner(this.serviceContext, partnerModel).execute();
@@ -56,7 +57,7 @@ public class PartnerJerseyService extends AbstractJerseyService {
     
     @PUT
     @Path("{id: \\d+}")
-    @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+    @Produces({MediaType.APPLICATION_JSON})
     public Response updateSinglePartner(@PathParam("id") final long id, final Partner partnerModel) {
         try {
             return new PutSinglePartner(this.serviceContext, id, partnerModel).execute();
@@ -68,7 +69,7 @@ public class PartnerJerseyService extends AbstractJerseyService {
 
     @DELETE
     @Path("{id: \\d+}")
-    @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+    @Produces({MediaType.APPLICATION_JSON})
     public Response deleteSinglePartner(@PathParam("id") final long id) {
         try {
             return new DeleteSinglePartner(this.serviceContext, id).execute();
@@ -80,8 +81,8 @@ public class PartnerJerseyService extends AbstractJerseyService {
 
     // ModuleOfPartner
     @GET
-    @Path("{partnerId:\\d}/modules")
-    @Produces(MediaType.APPLICATION_JSON)
+    @Path("{partnerId:\\d+}/modules")
+    @Produces({MediaType.APPLICATION_JSON})
     public Response getModuleOfPartner(
             @PathParam("partnerId") final long partnerId,
             @DefaultValue("0") @QueryParam("offset") int offset,
@@ -98,5 +99,69 @@ public class PartnerJerseyService extends AbstractJerseyService {
             );
         }
     }
-    
+
+    @GET
+    @Path("{partnerId:\\d+}/modules/{moduleId:\\d+}")
+    @Produces({MediaType.APPLICATION_JSON})
+    public Response getSingleModuleOfPartner(
+            @PathParam("partnerId") final long partnerId,
+            @PathParam("moduleId") final long moduleId
+    ) {
+        try {
+            return new GetSingleModuleOfPartner(this.serviceContext, partnerId, moduleId).execute();
+        } catch (SuttonWebAppException e) {
+            throw new WebApplicationException(Response
+                    .status(e.getStatus().getCode())
+                    .entity(e.getExceptionMessage()).build()
+            );
+        }
+    }
+
+    @POST
+    @Path("{partnerId:\\d+}/modules")
+    @Produces({MediaType.APPLICATION_JSON})
+    public Response createSingleModuleOfPartner(
+            @PathParam("partnerId") final long partnerId,
+            final Module module
+    ) {
+        try {
+            return new PostNewModuleOfPartner(this.serviceContext, partnerId, module).execute();
+        } catch (SuttonWebAppException e) {
+            throw new WebApplicationException(Response
+                    .status(e.getStatus().getCode())
+                    .entity(e.getExceptionMessage()).build()
+            );
+        }
+    }
+
+    @PUT
+    @Path("{partnerId:\\d+}/modules/{moduleId:\\d+}")
+    @Produces({MediaType.APPLICATION_JSON})
+    public Response updateSingleModuleOfPartner(
+            @PathParam("partnerId") final long partnerId,
+            @PathParam("moduleId") final long moduleId,
+            final Module module
+    ) {
+        try {
+            return new PutSingleModuleOfPartner(this.serviceContext, partnerId, moduleId, module).execute();
+        } catch (SuttonWebAppException e) {
+            throw new WebApplicationException(Response.status(e.getStatus().getCode())
+                    .entity(e.getExceptionMessage()).build());
+        }
+    }
+
+    @DELETE
+    @Path("{partnerId:\\d+}/modules/{moduleId:\\d+}")
+    @Produces({MediaType.APPLICATION_JSON})
+    public Response deleteSingleModuleOfPartner(
+            @PathParam("partnerId") final long partnerId,
+            @PathParam("moduleId") final long moduleId
+    ) {
+        try {
+            return new DeleteSingleModuleOfPartner(this.serviceContext, moduleId, partnerId).execute();
+        } catch (SuttonWebAppException e) {
+            throw new WebApplicationException(Response.status(e.getStatus().getCode())
+                    .entity(e.getExceptionMessage()).build());
+        }
+    }
 }

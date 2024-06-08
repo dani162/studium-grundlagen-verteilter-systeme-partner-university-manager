@@ -149,6 +149,8 @@ public class ManagerRestClient extends AbstractRestClient {
                 (response) -> {
                     this.currentPartnerData = new LinkedList(response.getResponseData());
                     this.cursorPartnerData = 0;
+                    this.currentModuleData = Collections.EMPTY_LIST;
+                    this.cursorModuleData = 0;
                 }
         );
     }
@@ -212,13 +214,25 @@ public class ManagerRestClient extends AbstractRestClient {
 
     //<editor-fold desc="Module">
     public boolean isGetAllModulesOfPartnerAllowed() {
-        return isLinkAvailable(ModuleOfPartnerRelTypes.GET_ALL_MODULES_OF_PARTNER);
+        return isLinkAvailable(ModuleOfPartnerRelTypes.GET_ALL_MODULES_OF_PARTNER) || !this.currentPartnerData.isEmpty();
     }
     public void getAllModulesOfPartner() throws IOException {
-        if (isGetAllModulesOfPartnerAllowed()) {
+        if (isLinkAvailable(ModuleOfPartnerRelTypes.GET_ALL_MODULES_OF_PARTNER)) {
             processResponse(
                     this.moduleWebClient.getCollectionOfModule(getUrl(ModuleOfPartnerRelTypes.GET_ALL_MODULES_OF_PARTNER)),
                     (response) -> {
+                        this.currentModuleData = new LinkedList<>(response.getResponseData());
+                        this.cursorModuleData = 0;
+                    }
+            );
+        } else if (!this.currentPartnerData.isEmpty()) {
+            processResponse(
+                    this.moduleWebClient.getCollectionOfModule(
+                            this.currentPartnerData.get(this.cursorPartnerData).getModules().getUrl()
+                    ),
+                    (response) -> {
+                        this.currentPartnerData = Collections.EMPTY_LIST;
+                        this.cursorPartnerData = 0;
                         this.currentModuleData = new LinkedList<>(response.getResponseData());
                         this.cursorModuleData = 0;
                     }
@@ -258,7 +272,7 @@ public class ManagerRestClient extends AbstractRestClient {
         }
     }
     public List<ModuleModel> moduleOfPartnerData() {
-        if (this.currentPartnerData.isEmpty()) {
+        if (this.currentModuleData.isEmpty()) {
             throw new IllegalStateException();
         }
         return this.currentModuleData;
@@ -269,7 +283,7 @@ public class ManagerRestClient extends AbstractRestClient {
     }
     public void getSingleModuleOfPartner() throws IOException {
         // TODO: theoretically here should also be checked,
-        // if the location header is actually points the Module type
+        //  if the location header is actually points the Module type
         if (isLocationHeaderAvailable()) {
             getSingleModuleOfPartner(getLocationHeaderURL());
         } else if (!this.currentModuleData.isEmpty()) {

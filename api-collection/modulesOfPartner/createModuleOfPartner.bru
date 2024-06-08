@@ -1,0 +1,19 @@
+meta {
+  name: createModuleOfPartner
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{url}}/partners/1536/modules
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "name": "Technology",
+    "numberOfCreditPoints": 5,
+    "semesterType": 0
+  }
+}

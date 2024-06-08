@@ -5,10 +5,6 @@ import de.fhws.fiw.fds.manager.server.database.ModuleDao;
 import de.fhws.fiw.fds.sutton.server.database.inmemory.AbstractInMemoryStorage;
 
 public class ModuleStorage extends AbstractInMemoryStorage<Module> implements ModuleDao {
-    public ModuleStorage() {
-        super();
-    }
-
     @Override
     public void resetDatabase() {
         this.storage.clear();

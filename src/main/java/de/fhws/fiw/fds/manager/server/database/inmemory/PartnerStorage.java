@@ -7,7 +7,6 @@ import de.fhws.fiw.fds.sutton.server.database.inmemory.AbstractInMemoryStorage;
 import de.fhws.fiw.fds.sutton.server.database.inmemory.InMemoryPaging;
 import de.fhws.fiw.fds.sutton.server.database.results.CollectionModelResult;
 
-import java.time.LocalDate;
 import java.util.function.Predicate;
 
 public class PartnerStorage extends AbstractInMemoryStorage<Partner> implements PartnerDao {
@@ -22,10 +21,6 @@ public class PartnerStorage extends AbstractInMemoryStorage<Partner> implements 
     @Override
     public void resetDatabase() {
         this.storage.clear();
-    }
-
-    public PartnerStorage() {
-        super();
     }
 
     private Predicate<Partner> byPartnerNameAndCountry(String partnerName, String country) {

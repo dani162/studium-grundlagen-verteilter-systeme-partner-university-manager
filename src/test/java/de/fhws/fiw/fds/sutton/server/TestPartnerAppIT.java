@@ -196,8 +196,8 @@ public class TestPartnerAppIT {
                     //</editor-fold>
 
                     @Nested
-                    class TestCreateModuleOfPartner {
-                        //<editor-fold desc="TestCreateModuleOfPartner">
+                    class CreateModuleOfPartner {
+                        //<editor-fold desc="CreateModuleOfPartner">
                         public ModuleModel createdSampleModuleOfPartner = getSampleModuleOfPartner();
 
                         @BeforeEach()
@@ -211,7 +211,7 @@ public class TestPartnerAppIT {
                         }
 
                         @Test
-                        public void get_partner_allowed() {
+                        public void get_module_of_partner_allowed() {
                             assertTrue(client.isGetSingleModuleOfPartnerAllowed());
                         }
                         //</editor-fold>
@@ -230,9 +230,14 @@ public class TestPartnerAppIT {
                             }
 
                             @Test
-                            public void get_partner_equals_created_partner() {
-                                assertNotSame(client.partnerData().getFirst(), createdSampleModuleOfPartner);
-                                assertEquals(client.partnerData().getFirst(), createdSampleModuleOfPartner);
+                            public void delete_module_of_partner_allowed() {
+                                assertTrue(client.isDeleteModuleOfPartnerAllowed());
+                            }
+
+                            @Test
+                            public void get_module_of_partner_equals_created_module() {
+                                assertNotSame(client.moduleOfPartnerData().getFirst(), createdSampleModuleOfPartner);
+                                assertEquals(client.moduleOfPartnerData().getFirst(), createdSampleModuleOfPartner);
                             }
                             //</editor-fold>
 
@@ -288,13 +293,13 @@ public class TestPartnerAppIT {
                                 }
 
                                 @Test
-                                public void get_partner_allowed() {
+                                public void get_module_of_partner_allowed() {
                                     assertTrue(client.isGetSingleModuleOfPartnerAllowed());
                                 }
 
                                 @Test
-                                public void partner_in_collection() {
-                                    assertEquals(1, client.partnerData().size());
+                                public void module_of_partner_in_collection() {
+                                    assertEquals(1, client.moduleOfPartnerData().size());
                                 }
                                 //</editor-fold>
                             }
