@@ -15,7 +15,7 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
-public class DemoRestClient extends AbstractRestClient {
+public class ManagerRestClient extends AbstractRestClient {
     private static final String BASE_URL = Constants.BASE_URL;
 
     final private DispatcherWebClient dispatcherWebClient;
@@ -28,7 +28,7 @@ public class DemoRestClient extends AbstractRestClient {
     private List<ModuleModel> currentModuleData;
     private int cursorModuleData = 0;
 
-    public DemoRestClient() {
+    public ManagerRestClient() {
         super();
         this.dispatcherWebClient = new DispatcherWebClient();
         this.partnerWebClient = new PartnerWebClient();
@@ -36,8 +36,17 @@ public class DemoRestClient extends AbstractRestClient {
     }
 
     public void start() throws IOException {
-        processResponse(this.dispatcherWebClient.getDispatcher(BASE_URL), (response -> {
-        }));
+        processResponse(
+                this.dispatcherWebClient.getDispatcher(BASE_URL),
+                (response -> {})
+        );
+    }
+
+    public void resetDatabase() throws IOException {
+        processResponse(
+                this.dispatcherWebClient.resetDatabaseOnServer(BASE_URL),
+                (response) -> {}
+        );
     }
 
     //<editor-fold desc="Partner">
@@ -49,7 +58,7 @@ public class DemoRestClient extends AbstractRestClient {
             processResponse(
                     this.partnerWebClient.getCollectionOfPartner(getUrl(PartnerRelTypes.GET_ALL_PARTNERS)),
                     (response) -> {
-                        this.currentPartnerData = Collections.EMPTY_LIST;
+                        this.currentPartnerData = new LinkedList<>(response.getResponseData());
                         this.cursorPartnerData = 0;
                     }
             );
@@ -57,10 +66,20 @@ public class DemoRestClient extends AbstractRestClient {
             throw new IllegalStateException();
         }
     }
+    public List<PartnerModel> partnerData() {
+        if (this.currentPartnerData.isEmpty()) {
+            throw new IllegalStateException();
+        }
+        return this.currentPartnerData;
+    }
+
+    public boolean isGetSinglePartnerAllowed() {
+        return !this.currentPartnerData.isEmpty() || isLocationHeaderAvailable();
+    }
 
     public void getSinglePartner() throws IOException {
         // TODO: theoretically here should also be checked,
-        // if the location header is actually points the Partner type
+        //  if the location header is actually points the Partner type
         if (isLocationHeaderAvailable()) {
             getSinglePartner(getLocationHeaderURL());
         } else if (!this.currentPartnerData.isEmpty()) {
@@ -148,13 +167,19 @@ public class DemoRestClient extends AbstractRestClient {
             processResponse(
                     this.moduleWebClient.getCollectionOfModule(getUrl(ModuleOfPartnerRelTypes.GET_ALL_MODULES_OF_PARTNER)),
                     (response) -> {
-                        this.currentModuleData = Collections.EMPTY_LIST;
+                        this.currentModuleData = new LinkedList<>(response.getResponseData());
                         this.cursorModuleData = 0;
                     }
             );
         } else {
             throw new IllegalStateException();
         }
+    }
+    public List<ModuleModel> moduleData() {
+        if (this.currentPartnerData.isEmpty()) {
+            throw new IllegalStateException();
+        }
+        return this.currentModuleData;
     }
 
     public void getSingleModule() throws IOException {

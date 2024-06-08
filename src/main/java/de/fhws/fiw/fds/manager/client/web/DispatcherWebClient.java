@@ -25,4 +25,8 @@ public class DispatcherWebClient {
                 response.getLastStatusCode()
         );
     }
+
+    public DispatcherWebResponse resetDatabaseOnServer(String url) throws IOException {
+        return createResponse(this.client.sendGetSingleRequest(url + "/resetdatabase"));
+    }
 }

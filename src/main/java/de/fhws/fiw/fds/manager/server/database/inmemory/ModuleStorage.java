@@ -12,4 +12,9 @@ public class ModuleStorage extends AbstractInMemoryStorage<Module> implements Mo
 
     private void populateData() {
     }
+
+    @Override
+    public void resetDatabase() {
+        this.storage.clear();
+    }
 }

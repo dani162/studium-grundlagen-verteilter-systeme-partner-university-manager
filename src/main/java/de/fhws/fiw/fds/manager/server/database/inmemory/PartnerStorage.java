@@ -19,6 +19,11 @@ public class PartnerStorage extends AbstractInMemoryStorage<Partner> implements 
         ), searchParameter.getOffset(), searchParameter.getSize());
     }
 
+    @Override
+    public void resetDatabase() {
+        this.storage.clear();
+    }
+
     public PartnerStorage() {
         super();
         this.populateData();

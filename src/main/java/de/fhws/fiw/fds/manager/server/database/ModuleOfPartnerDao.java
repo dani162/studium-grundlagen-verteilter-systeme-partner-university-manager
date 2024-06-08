@@ -6,4 +6,5 @@ import de.fhws.fiw.fds.sutton.server.database.IDatabaseRelationAccessObject;
 
 public interface ModuleOfPartnerDao extends IDatabaseRelationAccessObject<Module> {
 
+    void resetDatabase();
 }

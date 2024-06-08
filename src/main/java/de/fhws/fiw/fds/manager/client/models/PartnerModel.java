@@ -7,6 +7,7 @@ import de.fhws.fiw.fds.sutton.client.model.AbstractClientModel;
 import de.fhws.fiw.fds.sutton.client.utils.Link;
 
 import java.time.LocalDate;
+import java.util.Objects;
 
 public class PartnerModel extends AbstractClientModel {
     private String name;
@@ -132,4 +133,28 @@ public class PartnerModel extends AbstractClientModel {
         this.modules = modules;
     }
     //</editor-fold>
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        PartnerModel that = (PartnerModel) o;
+        return numberOfSendableStudents == that.numberOfSendableStudents && numberOfAcceptableStudents == that.numberOfAcceptableStudents && Objects.equals(name, that.name) && Objects.equals(country, that.country) && Objects.equals(department, that.department) && Objects.equals(website, that.website) && Objects.equals(contactPerson, that.contactPerson) && Objects.equals(startOfNextSpringSemester, that.startOfNextSpringSemester) && Objects.equals(startOfNextAutumnSemester, that.startOfNextAutumnSemester);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = Objects.hashCode(name);
+        result = 31 * result + Objects.hashCode(country);
+        result = 31 * result + Objects.hashCode(department);
+        result = 31 * result + Objects.hashCode(website);
+        result = 31 * result + Objects.hashCode(contactPerson);
+        result = 31 * result + numberOfSendableStudents;
+        result = 31 * result + numberOfAcceptableStudents;
+        result = 31 * result + Objects.hashCode(startOfNextSpringSemester);
+        result = 31 * result + Objects.hashCode(startOfNextAutumnSemester);
+        return result;
+    }
 }

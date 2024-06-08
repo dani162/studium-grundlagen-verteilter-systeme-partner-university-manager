@@ -5,4 +5,5 @@ import de.fhws.fiw.fds.sutton.server.database.IDatabaseAccessObject;
 
 public interface ModuleDao extends IDatabaseAccessObject<Module> {
 
+    void resetDatabase();
 }

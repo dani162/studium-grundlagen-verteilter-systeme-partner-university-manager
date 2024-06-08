@@ -29,4 +29,9 @@ public class ModuleOfPartnerStorage extends AbstractInMemoryRelationStorage<Modu
                 searchParameter.getOffset(), searchParameter.getSize()
         );
     }
+
+    @Override
+    public void resetDatabase() {
+        this.storage.clear();
+    }
 }
