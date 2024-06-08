@@ -126,7 +126,7 @@ public class ManagerRestClient extends AbstractRestClient {
     }
 
     public boolean isGetSinglePartnerAllowed() {
-        return !this.currentPartnerData.isEmpty() || isLocationHeaderAvailable();
+        return !this.currentPartnerData.isEmpty() || isLinkAvailable(PartnerRelTypes.GET_SINGLE_PARTNER) || isLocationHeaderAvailable();
     }
 
     public void getSinglePartner() throws IOException {
@@ -134,6 +134,8 @@ public class ManagerRestClient extends AbstractRestClient {
         //  if the location header is actually points the Partner type
         if (isLocationHeaderAvailable()) {
             getSinglePartner(getLocationHeaderURL());
+        } else if (isLinkAvailable(PartnerRelTypes.GET_SINGLE_PARTNER)) {
+            getSinglePartner(getUrl(PartnerRelTypes.GET_SINGLE_PARTNER));
         } else if (!this.currentPartnerData.isEmpty()) {
             getSinglePartner(this.cursorPartnerData);
         } else {
@@ -214,7 +216,8 @@ public class ManagerRestClient extends AbstractRestClient {
 
     //<editor-fold desc="Module">
     public boolean isGetAllModulesOfPartnerAllowed() {
-        return isLinkAvailable(ModuleOfPartnerRelTypes.GET_ALL_MODULES_OF_PARTNER) || !this.currentPartnerData.isEmpty();
+        return isLinkAvailable(ModuleOfPartnerRelTypes.GET_ALL_MODULES_OF_PARTNER) ||
+                !this.currentPartnerData.isEmpty();
     }
     public void getAllModulesOfPartner() throws IOException {
         if (isLinkAvailable(ModuleOfPartnerRelTypes.GET_ALL_MODULES_OF_PARTNER)) {
@@ -279,13 +282,17 @@ public class ManagerRestClient extends AbstractRestClient {
     }
 
     public boolean isGetSingleModuleOfPartnerAllowed() {
-        return !this.currentModuleData.isEmpty() || isLocationHeaderAvailable();
+        return !this.currentModuleData.isEmpty() ||
+                isLinkAvailable(ModuleOfPartnerRelTypes.GET_SINGLE_MODULE_OF_PARTNER) ||
+                isLocationHeaderAvailable();
     }
     public void getSingleModuleOfPartner() throws IOException {
         // TODO: theoretically here should also be checked,
         //  if the location header is actually points the Module type
         if (isLocationHeaderAvailable()) {
             getSingleModuleOfPartner(getLocationHeaderURL());
+        } else if (isLinkAvailable(ModuleOfPartnerRelTypes.GET_SINGLE_MODULE_OF_PARTNER)) {
+            getSingleModuleOfPartner(getUrl(ModuleOfPartnerRelTypes.GET_SINGLE_MODULE_OF_PARTNER));
         } else if (!this.currentModuleData.isEmpty()) {
             getSingleModuleOfPartner(this.cursorModuleData);
         } else {

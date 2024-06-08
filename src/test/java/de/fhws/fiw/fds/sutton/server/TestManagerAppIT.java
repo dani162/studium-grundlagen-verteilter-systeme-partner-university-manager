@@ -12,7 +12,7 @@ import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class TestPartnerAppIT {
+public class TestManagerAppIT {
     final private Faker faker = new Faker();
     private ManagerRestClient client;
 
@@ -24,7 +24,6 @@ public class TestPartnerAppIT {
 
     @Nested
     class Dispatcher {
-
         //<editor-fold desc="Dispatcher">
         @BeforeEach()
         public void setup() throws IOException {
@@ -32,12 +31,12 @@ public class TestPartnerAppIT {
         }
 
         @Test
-        public void is_available() {
+        public void ok() {
             assertEquals(200, client.getLastStatusCode());
         }
 
         @Test
-        public void is_get_all_partners_allowed() {
+        public void get_all_partners_allowed() {
             assertTrue(client.isGetAllPartnersAllowed());
         }
         //</editor-fold>
@@ -52,7 +51,7 @@ public class TestPartnerAppIT {
             }
 
             @Test
-            public void available() {
+            public void ok() {
                 assertEquals(200, client.getLastStatusCode());
             }
 
@@ -163,7 +162,7 @@ public class TestPartnerAppIT {
                 }
 
                 @Test
-                public void available() {
+                public void ok() {
                     assertEquals(200, client.getLastStatusCode());
                 }
 
@@ -182,15 +181,15 @@ public class TestPartnerAppIT {
                     }
 
                     @Test
-                    public void get_partner_disallowed() {
+                    public void get_single_module_of_partner_disallowed() {
                         assertFalse(client.isGetSingleModuleOfPartnerAllowed());
                     }
 
                     @Test
-                    public void partner_collection_empty() {
+                    public void module_of_partner_data_collection_empty() {
                         assertThrows(
                                 IllegalStateException.class,
-                                () -> client.partnerData()
+                                () -> client.moduleOfPartnerData()
                         );
                     }
                     //</editor-fold>
@@ -206,13 +205,18 @@ public class TestPartnerAppIT {
                         }
 
                         @Test
-                        public void available() {
+                        public void ok() {
                             assertEquals(201, client.getLastStatusCode());
                         }
 
                         @Test
                         public void get_module_of_partner_allowed() {
                             assertTrue(client.isGetSingleModuleOfPartnerAllowed());
+                        }
+
+                        @Test
+                        public void get_single_partner_allowed() {
+                            assertTrue(client.isGetSinglePartnerAllowed());
                         }
                         //</editor-fold>
 
@@ -225,7 +229,7 @@ public class TestPartnerAppIT {
                             }
 
                             @Test
-                            public void available() {
+                            public void ok() {
                                 assertEquals(200, client.getLastStatusCode());
                             }
 
@@ -250,29 +254,29 @@ public class TestPartnerAppIT {
                                 }
 
                                 @Test
-                                public void available() {
+                                public void ok() {
                                     assertEquals(204, client.getLastStatusCode());
                                 }
 
                                 @Test
-                                public void is_get_all_partners_allowed() {
+                                public void is_get_all_modules_of_partners_allowed() {
                                     assertTrue(client.isGetAllModulesOfPartnerAllowed());
                                 }
                                 //</editor-fold>
 
                                 @Nested
-                                class TestGetAllModulesOfPartner {
-                                    //<editor-fold desc="TestGetAllModulesOfPartner">
+                                class GetAllModulesOfPartner {
+                                    //<editor-fold desc="GetAllModulesOfPartner">
                                     @BeforeEach()
                                     public void setup() throws IOException {
                                         client.getAllModulesOfPartner();
                                     }
 
                                     @Test
-                                    public void partner_collection_empty() {
+                                    public void module_of_partner_collection_empty() {
                                         assertThrows(
                                                 IllegalStateException.class,
-                                                () -> client.partnerData()
+                                                () -> client.moduleOfPartnerData()
                                         );
                                     }
                                     //</editor-fold>
@@ -288,7 +292,7 @@ public class TestPartnerAppIT {
                                 }
 
                                 @Test
-                                public void available() {
+                                public void ok() {
                                     assertEquals(200, client.getLastStatusCode());
                                 }
 
@@ -303,10 +307,91 @@ public class TestPartnerAppIT {
                                 }
                                 //</editor-fold>
                             }
+
+                            @Nested
+                            class UpdateModuleOfPartner {
+                                //<editor-fold desc="UpdatePartner">
+                                String oldName;
+                                String newName;
+                                @BeforeEach()
+                                public void setup() throws IOException {
+                                    var module = client.moduleOfPartnerData().getFirst();
+                                    oldName = module.getName();
+                                    newName = "Some Special Non Existing Module \uD83E\uDDC0";
+                                    module.setName(newName);
+                                    client.updateModuleOfPartner(module);
+                                }
+
+                                @Test
+                                public void ok() {
+                                    assertEquals(204, client.getLastStatusCode());
+                                }
+
+                                @Test
+                                public void get_module_of_partner_allowed() {
+                                    assertTrue(client.isGetSingleModuleOfPartnerAllowed());
+                                }
+                                //</editor-fold>
+
+                                @Nested
+                                class GetModuleOfPartnerUpdated {
+                                    //<editor-fold desc="GetPartnerUpdated">
+                                    @BeforeEach()
+                                    public void setup() throws IOException {
+                                        client.getSingleModuleOfPartner();
+                                    }
+
+                                    @Test
+                                    public void module_of_partner_updated() {
+                                        assertEquals(newName, client.moduleOfPartnerData().getFirst().getName());
+                                    }
+                                    //</editor-fold>
+                                }
+                            }
                         }
                     }
                 }
 
+                @Nested
+                class UpdatePartner {
+                    //<editor-fold desc="UpdatePartner">
+                    String oldName;
+                    String newName;
+                    @BeforeEach()
+                    public void setup() throws IOException {
+                        var partner = client.partnerData().getFirst();
+                        oldName = partner.getName();
+                        newName = "Some Special Non Existing University \uD83E\uDDC0";
+                        partner.setName(newName);
+                        client.updatePartner(partner);
+                    }
+
+                    @Test
+                    public void ok() {
+                        assertEquals(204, client.getLastStatusCode());
+                    }
+
+                    @Test
+                    public void get_single_partner_allowed() {
+                        assertTrue(client.isGetSinglePartnerAllowed());
+                    }
+                    //</editor-fold>
+
+                    @Nested
+                    class GetPartnerUpdated {
+                        //<editor-fold desc="GetPartnerUpdated">
+                        @BeforeEach()
+                        public void setup() throws IOException {
+                            client.getSinglePartner();
+                        }
+
+                        @Test
+                        public void partner_updated() {
+                            assertEquals(newName, client.partnerData().getFirst().getName());
+                        }
+                        //</editor-fold>
+                    }
+                }
             }
         }
 
@@ -343,7 +428,7 @@ public class TestPartnerAppIT {
                 }
 
                 @Test
-                public void available() {
+                public void ok() {
                     assertEquals(201, client.getLastStatusCode());
                 }
 
@@ -362,7 +447,7 @@ public class TestPartnerAppIT {
                     }
 
                     @Test
-                    public void available() {
+                    public void ok() {
                         assertEquals(200, client.getLastStatusCode());
                     }
 
@@ -382,7 +467,7 @@ public class TestPartnerAppIT {
                         }
 
                         @Test
-                        public void available() {
+                        public void ok() {
                             assertEquals(204, client.getLastStatusCode());
                         }
 
@@ -420,7 +505,7 @@ public class TestPartnerAppIT {
                         }
 
                         @Test
-                        public void available() {
+                        public void ok() {
                             assertEquals(200, client.getLastStatusCode());
                         }
 
