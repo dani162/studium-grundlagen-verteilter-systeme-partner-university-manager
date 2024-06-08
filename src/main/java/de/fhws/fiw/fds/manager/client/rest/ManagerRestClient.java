@@ -24,9 +24,23 @@ public class ManagerRestClient extends AbstractRestClient {
 
     private List<PartnerModel> currentPartnerData;
     private int cursorPartnerData = 0;
+    public void setPartnerCursor(int index) {
+        if (0 <= index && index < this.currentPartnerData.size()) {
+            this.cursorPartnerData = index;
+        } else {
+            throw new IllegalArgumentException();
+        }
+    }
 
     private List<ModuleModel> currentModuleData;
     private int cursorModuleData = 0;
+    public void setModuleCursor(int index) {
+        if (0 <= index && index < this.currentModuleData.size()) {
+            this.cursorModuleData = index;
+        } else {
+            throw new IllegalArgumentException();
+        }
+    }
 
     public ManagerRestClient() {
         super();
