@@ -67,6 +67,45 @@ public class TestPartnerAppIT {
             //</editor-fold>
 
             @Nested
+            class GetPartner {
+                //<editor-fold desc="GetPartner">
+                @BeforeEach()
+                public void setup() throws IOException {
+                    client.setPartnerCursor(0);
+                    client.getSinglePartner();
+                }
+
+                @Test
+                public void available() {
+                    assertEquals(200, client.getLastStatusCode());
+                }
+                //</editor-fold>
+            }
+        }
+
+        @Nested
+        class TestGetAllPartnersEmpty {
+            //<editor-fold desc="TestGetAllPartnersEmpty">
+            @BeforeEach()
+            public void setup() throws IOException {
+                client.getAllPartners();
+            }
+
+            @Test
+            public void get_partner_disallowed() {
+                assertFalse(client.isGetSinglePartnerAllowed());
+            }
+
+            @Test
+            public void partner_collection_empty() {
+                assertThrows(
+                        IllegalStateException.class,
+                        () -> client.partnerData()
+                );
+            }
+            //</editor-fold>
+
+            @Nested
             class TestCreatePartner {
                 //<editor-fold desc="TestCreatePartner">
                 public PartnerModel createdSamplePartner = getSamplePartner();
@@ -102,26 +141,75 @@ public class TestPartnerAppIT {
 
                     @Test
                     public void get_partner_equals_created_partner() {
+                        assertNotSame(client.partnerData().getFirst(), createdSamplePartner);
                         assertEquals(client.partnerData().getFirst(), createdSamplePartner);
                     }
                     //</editor-fold>
+
+                    @Nested
+                    class DeletePartner {
+                        //<editor-fold desc="DeletePartner">
+                        @BeforeEach()
+                        public void setup() throws IOException {
+                            client.deletePartner();
+                        }
+
+                        @Test
+                        public void available() {
+                            assertEquals(204, client.getLastStatusCode());
+                        }
+
+                        @Test
+                        public void is_get_all_partners_allowed() {
+                            assertTrue(client.isGetAllPartnersAllowed());
+                        }
+                        //</editor-fold>
+
+                        @Nested
+                        class TestGetAllPartners {
+                            //<editor-fold desc="TestGetAllPartners">
+                            @BeforeEach()
+                            public void setup() throws IOException {
+                                client.getAllPartners();
+                            }
+
+                            @Test
+                            public void partner_collection_empty() {
+                                assertThrows(
+                                        IllegalStateException.class,
+                                        () -> client.partnerData()
+                                );
+                            }
+                            //</editor-fold>
+                        }
+                    }
+
+                    @Nested
+                    class TestGetAllPartners {
+                        //<editor-fold desc="TestGetAllPartners">
+                        @BeforeEach()
+                        public void setup() throws IOException {
+                            client.getAllPartners();
+                        }
+
+                        @Test
+                        public void available() {
+                            assertEquals(200, client.getLastStatusCode());
+                        }
+
+                        @Test
+                        public void get_partner_allowed() {
+                            assertTrue(client.isGetSinglePartnerAllowed());
+                        }
+
+                        @Test
+                        public void partner_in_collection() {
+                            assertEquals(1, client.partnerData().size());
+                        }
+                        //</editor-fold>
+                    }
                 }
             }
-        }
-
-        @Nested
-        class TestGetAllPartnersEmpty {
-            //<editor-fold desc="TestGetAllPartnersEmpty">
-            @BeforeEach()
-            public void setup() throws IOException {
-                client.getAllPartners();
-            }
-
-            @Test
-            public void get_partner_disallowed() {
-                assertFalse(client.isGetSinglePartnerAllowed());
-            }
-            //</editor-fold>
         }
     }
 
