@@ -7,10 +7,6 @@ import de.fhws.fiw.fds.sutton.server.database.inmemory.AbstractInMemoryStorage;
 public class ModuleStorage extends AbstractInMemoryStorage<Module> implements ModuleDao {
     public ModuleStorage() {
         super();
-        this.populateData();
-    }
-
-    private void populateData() {
     }
 
     @Override

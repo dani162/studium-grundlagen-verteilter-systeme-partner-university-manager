@@ -1,6 +1,7 @@
 package de.fhws.fiw.fds.sutton.server;
 
 import com.github.javafaker.Faker;
+import de.fhws.fiw.fds.manager.client.models.ModuleModel;
 import de.fhws.fiw.fds.manager.client.models.PartnerModel;
 import de.fhws.fiw.fds.manager.client.rest.ManagerRestClient;
 import org.junit.jupiter.api.BeforeEach;
@@ -22,7 +23,7 @@ public class TestPartnerAppIT {
     }
 
     @Nested
-    class TestDispatcher {
+    class Dispatcher {
 
         //<editor-fold desc="Dispatcher">
         @BeforeEach()
@@ -42,8 +43,8 @@ public class TestPartnerAppIT {
         //</editor-fold>
 
         @Nested
-        class TestGetAllPartners {
-            //<editor-fold desc="TestGetAllPartners">
+        class GetAllPartners {
+            //<editor-fold desc="GetAllPartners">
             @BeforeEach()
             public void setup() throws IOException {
                 addExamplePartners(56);
@@ -64,7 +65,93 @@ public class TestPartnerAppIT {
             public void get_partner_allowed() {
                 assertTrue(client.isGetSinglePartnerAllowed());
             }
+
+            @Test
+            public void next_page_allowed() {
+                assertTrue(client.hasNextPage());
+            }
+            @Test
+            public void prev_page_disallowed() {
+                assertFalse(client.hasPrevPage());
+            }
             //</editor-fold>
+
+            @Nested
+            class GetNextPartnerPage1 {
+                //<editor-fold desc="GetNextPartnerPage1">
+                @BeforeEach()
+                public void setup() throws IOException {
+                    client.getNextPartnerPage();
+                }
+
+                @Test
+                public void next_page_allowed() {
+                    assertTrue(client.hasNextPage());
+                }
+                @Test
+                public void prev_page_disallowed() {
+                    assertTrue(client.hasPrevPage());
+                }
+                //</editor-fold>
+
+                @Nested
+                class GetNextPartnerPage2 {
+                    //<editor-fold desc="GetNextPartnerPage2">
+                    @BeforeEach()
+                    public void setup() throws IOException {
+                        client.getNextPartnerPage();
+                    }
+
+                    @Test
+                    public void next_page_allowed() {
+                        assertFalse(client.hasNextPage());
+                    }
+                    @Test
+                    public void prev_page_disallowed() {
+                        assertTrue(client.hasPrevPage());
+                    }
+                    //</editor-fold>
+
+
+                    @Nested
+                    class GetPrevPartnerPage1 {
+                        //<editor-fold desc="GetPrevPartnerPage1">
+                        @BeforeEach()
+                        public void setup() throws IOException {
+                            client.getPrevPartnerPage();
+                        }
+
+                        @Test
+                        public void next_page_allowed() {
+                            assertTrue(client.hasNextPage());
+                        }
+                        @Test
+                        public void prev_page_disallowed() {
+                            assertTrue(client.hasPrevPage());
+                        }
+                        //</editor-fold>
+
+                        @Nested
+                        class GetPrevPartnerPage0 {
+                            //<editor-fold desc="GetPrevPartnerPage0">
+                            @BeforeEach()
+                            public void setup() throws IOException {
+                                client.getPrevPartnerPage();
+                            }
+
+                            @Test
+                            public void next_page_allowed() {
+                                assertTrue(client.hasNextPage());
+                            }
+                            @Test
+                            public void prev_page_disallowed() {
+                                assertFalse(client.hasPrevPage());
+                            }
+                            //</editor-fold>
+                        }
+                    }
+                }
+            }
 
             @Nested
             class GetPartner {
@@ -79,12 +166,147 @@ public class TestPartnerAppIT {
                 public void available() {
                     assertEquals(200, client.getLastStatusCode());
                 }
+
+                @Test
+                public void get_modules_allowed() {
+                    assertTrue(client.isGetAllModulesOfPartnerAllowed());
+                }
                 //</editor-fold>
+
+                @Nested
+                class GetAllModulesOfPartnerEmpty {
+                    //<editor-fold desc="TestGetAllModulesOfPartnerEmpty">
+                    @BeforeEach()
+                    public void setup() throws IOException {
+                        client.getAllModulesOfPartner();
+                    }
+
+                    @Test
+                    public void get_partner_disallowed() {
+                        assertFalse(client.isGetSingleModuleOfPartnerAllowed());
+                    }
+
+                    @Test
+                    public void partner_collection_empty() {
+                        assertThrows(
+                                IllegalStateException.class,
+                                () -> client.partnerData()
+                        );
+                    }
+                    //</editor-fold>
+
+                    @Nested
+                    class TestCreateModuleOfPartner {
+                        //<editor-fold desc="TestCreateModuleOfPartner">
+                        public ModuleModel createdSampleModuleOfPartner = getSampleModuleOfPartner();
+
+                        @BeforeEach()
+                        public void setup() throws IOException {
+                            client.createModuleOfPartner(createdSampleModuleOfPartner);
+                        }
+
+                        @Test
+                        public void available() {
+                            assertEquals(201, client.getLastStatusCode());
+                        }
+
+                        @Test
+                        public void get_partner_allowed() {
+                            assertTrue(client.isGetSingleModuleOfPartnerAllowed());
+                        }
+                        //</editor-fold>
+
+                        @Nested
+                        class GetModuleOfPartner {
+                            //<editor-fold desc="GetModuleOfPartner">
+                            @BeforeEach()
+                            public void setup() throws IOException {
+                                client.getSingleModuleOfPartner();
+                            }
+
+                            @Test
+                            public void available() {
+                                assertEquals(200, client.getLastStatusCode());
+                            }
+
+                            @Test
+                            public void get_partner_equals_created_partner() {
+                                assertNotSame(client.partnerData().getFirst(), createdSampleModuleOfPartner);
+                                assertEquals(client.partnerData().getFirst(), createdSampleModuleOfPartner);
+                            }
+                            //</editor-fold>
+
+                            @Nested
+                            class DeleteModuleOfPartner {
+                                //<editor-fold desc="DeleteModuleOfPartner">
+                                @BeforeEach()
+                                public void setup() throws IOException {
+                                    client.deleteModuleOfPartner();
+                                }
+
+                                @Test
+                                public void available() {
+                                    assertEquals(204, client.getLastStatusCode());
+                                }
+
+                                @Test
+                                public void is_get_all_partners_allowed() {
+                                    assertTrue(client.isGetAllModulesOfPartnerAllowed());
+                                }
+                                //</editor-fold>
+
+                                @Nested
+                                class TestGetAllModulesOfPartner {
+                                    //<editor-fold desc="TestGetAllModulesOfPartner">
+                                    @BeforeEach()
+                                    public void setup() throws IOException {
+                                        client.getAllModulesOfPartner();
+                                    }
+
+                                    @Test
+                                    public void partner_collection_empty() {
+                                        assertThrows(
+                                                IllegalStateException.class,
+                                                () -> client.partnerData()
+                                        );
+                                    }
+                                    //</editor-fold>
+                                }
+                            }
+
+                            @Nested
+                            class TestGetAllModulesOfPartner {
+                                //<editor-fold desc="TestGetAllModulesOfPartner">
+                                @BeforeEach()
+                                public void setup() throws IOException {
+                                    client.getAllModulesOfPartner();
+                                }
+
+                                @Test
+                                public void available() {
+                                    assertEquals(200, client.getLastStatusCode());
+                                }
+
+                                @Test
+                                public void get_partner_allowed() {
+                                    assertTrue(client.isGetSingleModuleOfPartnerAllowed());
+                                }
+
+                                @Test
+                                public void partner_in_collection() {
+                                    assertEquals(1, client.partnerData().size());
+                                }
+                                //</editor-fold>
+                            }
+                        }
+                    }
+                }
+
             }
         }
 
         @Nested
-        class TestGetAllPartnersEmpty {
+        class GetAllPartnersEmpty {
             //<editor-fold desc="TestGetAllPartnersEmpty">
             @BeforeEach()
             public void setup() throws IOException {
@@ -238,6 +460,13 @@ public class TestPartnerAppIT {
             extraClient.getAllPartners();
             extraClient.createPartner(getSamplePartner());
         }
+    }
+
+    public ModuleModel getSampleModuleOfPartner() {
+        var module = new ModuleModel();
+        module.setName(faker.job().field());
+        module.setNumberOfCreditPoints(5);
+        return module;
     }
     //</editor-fold>
 }

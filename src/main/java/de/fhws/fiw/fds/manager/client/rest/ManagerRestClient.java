@@ -63,6 +63,14 @@ public class ManagerRestClient extends AbstractRestClient {
         );
     }
 
+    public boolean hasNextPage() {
+        return isLinkAvailable("next");
+    }
+
+    public boolean hasPrevPage() {
+        return isLinkAvailable("prev");
+    }
+
     //<editor-fold desc="Partner">
     public boolean isGetAllPartnersAllowed() {
         return isLinkAvailable(PartnerRelTypes.GET_ALL_PARTNERS);
@@ -78,6 +86,36 @@ public class ManagerRestClient extends AbstractRestClient {
             );
         } else {
             throw new IllegalStateException();
+        }
+    }
+    public void getNextPartnerPage() throws IOException {
+        // TODO: theoretically here should also be checked,
+        //  if the location header is actually points the Partner type
+        if (hasNextPage()) {
+            processResponse(
+                    this.partnerWebClient.getCollectionOfPartner(getUrl("next")),
+                    (response) -> {
+                        this.currentPartnerData = new LinkedList<>(response.getResponseData());
+                        this.cursorPartnerData = 0;
+                    }
+            );
+        } else {
+            throw  new IllegalStateException();
+        }
+    }
+    public void getPrevPartnerPage() throws IOException {
+        // TODO: theoretically here should also be checked,
+        //  if the location header is actually points the Partner type
+        if (hasPrevPage()) {
+            processResponse(
+                    this.partnerWebClient.getCollectionOfPartner(getUrl("prev")),
+                    (response) -> {
+                        this.currentPartnerData = new LinkedList<>(response.getResponseData());
+                        this.cursorPartnerData = 0;
+                    }
+            );
+        } else {
+            throw  new IllegalStateException();
         }
     }
     public List<PartnerModel> partnerData() {
@@ -173,11 +211,11 @@ public class ManagerRestClient extends AbstractRestClient {
     //</editor-fold>
 
     //<editor-fold desc="Module">
-    public boolean isGetAllModulesAllowed() {
+    public boolean isGetAllModulesOfPartnerAllowed() {
         return isLinkAvailable(ModuleOfPartnerRelTypes.GET_ALL_MODULES_OF_PARTNER);
     }
-    public void getAllModules() throws IOException {
-        if (isGetAllModulesAllowed()) {
+    public void getAllModulesOfPartner() throws IOException {
+        if (isGetAllModulesOfPartnerAllowed()) {
             processResponse(
                     this.moduleWebClient.getCollectionOfModule(getUrl(ModuleOfPartnerRelTypes.GET_ALL_MODULES_OF_PARTNER)),
                     (response) -> {
@@ -189,28 +227,61 @@ public class ManagerRestClient extends AbstractRestClient {
             throw new IllegalStateException();
         }
     }
-    public List<ModuleModel> moduleData() {
+    public void getNextModuleOfPartnerPage() throws IOException {
+        // TODO: theoretically here should also be checked,
+        //  if the location header is actually points the Partner type
+        if (hasNextPage()) {
+            processResponse(
+                    this.moduleWebClient.getCollectionOfModule(getUrl("next")),
+                    (response) -> {
+                        this.currentModuleData = new LinkedList<>(response.getResponseData());
+                        this.cursorModuleData = 0;
+                    }
+            );
+        } else {
+            throw  new IllegalStateException();
+        }
+    }
+    public void getPrevModuleOfPartnerPage() throws IOException {
+        // TODO: theoretically here should also be checked,
+        //  if the location header is actually points the Partner type
+        if (hasPrevPage()) {
+            processResponse(
+                    this.moduleWebClient.getCollectionOfModule(getUrl("prev")),
+                    (response) -> {
+                        this.currentModuleData = new LinkedList<>(response.getResponseData());
+                        this.cursorModuleData = 0;
+                    }
+            );
+        } else {
+            throw  new IllegalStateException();
+        }
+    }
+    public List<ModuleModel> moduleOfPartnerData() {
         if (this.currentPartnerData.isEmpty()) {
             throw new IllegalStateException();
         }
         return this.currentModuleData;
     }
 
-    public void getSingleModule() throws IOException {
+    public boolean isGetSingleModuleOfPartnerAllowed() {
+        return !this.currentModuleData.isEmpty() || isLocationHeaderAvailable();
+    }
+    public void getSingleModuleOfPartner() throws IOException {
         // TODO: theoretically here should also be checked,
         // if the location header is actually points the Module type
         if (isLocationHeaderAvailable()) {
-            getSingleModule(getLocationHeaderURL());
+            getSingleModuleOfPartner(getLocationHeaderURL());
         } else if (!this.currentModuleData.isEmpty()) {
-            getSingleModule(this.cursorModuleData);
+            getSingleModuleOfPartner(this.cursorModuleData);
         } else {
             throw new IllegalStateException();
         }
     }
-    private void getSingleModule(int index) throws IOException {
-        getSingleModule(this.currentModuleData.get(index).getSelfLink().getUrl());
+    private void getSingleModuleOfPartner(int index) throws IOException {
+        getSingleModuleOfPartner(this.currentModuleData.get(index).getSelfLink().getUrl());
     }
-    private void getSingleModule(String url) throws IOException {
+    private void getSingleModuleOfPartner(String url) throws IOException {
         processResponse(
                 this.moduleWebClient.getSingleModule(url),
                 (response) -> {
@@ -222,11 +293,11 @@ public class ManagerRestClient extends AbstractRestClient {
 
 
 
-    public boolean isCreateModuleAllowed() {
+    public boolean isCreateModuleOfPartnerAllowed() {
         return isLinkAvailable(ModuleOfPartnerRelTypes.CREATE_MODULE);
     }
-    public void createModule(ModuleModel person) throws IOException {
-        if (isCreateModuleAllowed()) {
+    public void createModuleOfPartner(ModuleModel person) throws IOException {
+        if (isCreateModuleOfPartnerAllowed()) {
             processResponse(
                     this.moduleWebClient.postNewModule(getUrl(ModuleOfPartnerRelTypes.CREATE_MODULE), person),
                     (response) -> {
@@ -239,11 +310,11 @@ public class ManagerRestClient extends AbstractRestClient {
         }
     }
 
-    public boolean isDeleteModuleAllowed() {
+    public boolean isDeleteModuleOfPartnerAllowed() {
         return isLinkAvailable(ModuleOfPartnerRelTypes.DELETE_SINGLE_MODULE_OF_PARTNER);
     }
-    public void deleteModule() throws IOException {
-        if (isDeleteModuleAllowed()) {
+    public void deleteModuleOfPartner() throws IOException {
+        if (isDeleteModuleOfPartnerAllowed()) {
             processResponse(
                     this.moduleWebClient.deleteModule(getUrl(ModuleOfPartnerRelTypes.DELETE_SINGLE_MODULE_OF_PARTNER)),
                     (response) -> {
@@ -256,11 +327,11 @@ public class ManagerRestClient extends AbstractRestClient {
         }
     }
 
-    public boolean isUpdateModuleAllowed() {
+    public boolean isUpdateModuleOfPartnerAllowed() {
         return isLinkAvailable(ModuleOfPartnerRelTypes.UPDATE_SINGLE_MODULE_OF_PARTNER);
     }
-    public void updateModule(ModuleModel partner) throws IOException {
-        if (isUpdateModuleAllowed()) {
+    public void updateModuleOfPartner(ModuleModel partner) throws IOException {
+        if (isUpdateModuleOfPartnerAllowed()) {
             processResponse(
                     this.moduleWebClient.putNewModule(
                             getUrl(ModuleOfPartnerRelTypes.UPDATE_SINGLE_MODULE_OF_PARTNER),

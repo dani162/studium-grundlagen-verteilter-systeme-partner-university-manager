@@ -5,6 +5,8 @@ import de.fhws.fiw.fds.sutton.client.converters.ClientLinkJsonConverter;
 import de.fhws.fiw.fds.sutton.client.model.AbstractClientModel;
 import de.fhws.fiw.fds.sutton.client.utils.Link;
 
+import java.util.Objects;
+
 public class ModuleModel extends AbstractClientModel {
     private String name;
     private int SemesterType;
@@ -55,4 +57,22 @@ public class ModuleModel extends AbstractClientModel {
         this.selfLink = selfLink;
     }
     //</editor-fold>
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        ModuleModel that = (ModuleModel) o;
+        return SemesterType == that.SemesterType && Float.compare(numberOfCreditPoints, that.numberOfCreditPoints) == 0 && Objects.equals(name, that.name);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = Objects.hashCode(name);
+        result = 31 * result + SemesterType;
+        result = 31 * result + Float.hashCode(numberOfCreditPoints);
+        return result;
+    }
 }
