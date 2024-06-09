@@ -306,6 +306,20 @@ public class TestManagerAppIT {
                                     assertEquals(1, client.moduleOfPartnerData().size());
                                 }
                                 //</editor-fold>
+
+                                @Nested
+                                class GetSingleModuleOfPartner {
+                                    @BeforeEach()
+                                    public void setup() throws IOException {
+                                        client.setModuleCursor(0);
+                                        client.getSingleModuleOfPartner();
+                                    }
+
+                                    @Test
+                                    public void ok() {
+                                        assertEquals(200, client.getLastStatusCode());
+                                    }
+                                }
                             }
 
                             @Nested

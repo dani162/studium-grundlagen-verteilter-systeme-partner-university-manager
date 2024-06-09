@@ -1,5 +1,6 @@
 package de.fhws.fiw.fds.manager.client.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import de.fhws.fiw.fds.sutton.client.converters.ClientLinkJsonConverter;
 import de.fhws.fiw.fds.sutton.client.model.AbstractClientModel;
@@ -12,16 +13,19 @@ public class ModuleModel extends AbstractClientModel {
     private int SemesterType;
     private float numberOfCreditPoints;
 
+//    @JsonDeserialize(using = ClientLinkJsonConverter.class)
+//    private Link selfLink;
     @JsonDeserialize(using = ClientLinkJsonConverter.class)
-    private Link selfLink;
+    private Link  selfLinkOnSecond;
 
     public ModuleModel() {}
 
-    public ModuleModel(String name, int semesterType, float numberOfCreditPoints, Link selfLink) {
+    public ModuleModel(String name, int semesterType, float numberOfCreditPoints, /*Link selfLink,*/ Link selfLinkOnSecond) {
         this.name = name;
         SemesterType = semesterType;
         this.numberOfCreditPoints = numberOfCreditPoints;
-        this.selfLink = selfLink;
+//        this.selfLink = selfLink;
+        this.selfLinkOnSecond = selfLinkOnSecond;
     }
 
     //<editor-fold desc="getter & setter">
@@ -49,12 +53,22 @@ public class ModuleModel extends AbstractClientModel {
         this.numberOfCreditPoints = numberOfCreditPoints;
     }
 
-    public Link getSelfLink() {
-        return selfLink;
+//    @JsonIgnore
+//    public Link getSelfLink() {
+//        return selfLink;
+//    }
+//
+//    public void setSelfLink(Link selfLink) {
+//        this.selfLink = selfLink;
+//    }
+
+    @JsonIgnore
+    public Link getSelfLinkOnSecond() {
+        return selfLinkOnSecond;
     }
 
-    public void setSelfLink(Link selfLink) {
-        this.selfLink = selfLink;
+    public void setSelfLinkOnSecond(Link selfLinkOnSecond) {
+        this.selfLinkOnSecond = selfLinkOnSecond;
     }
     //</editor-fold>
 

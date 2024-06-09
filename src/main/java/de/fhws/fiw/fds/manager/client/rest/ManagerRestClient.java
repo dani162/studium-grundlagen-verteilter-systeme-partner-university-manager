@@ -88,6 +88,25 @@ public class ManagerRestClient extends AbstractRestClient {
             throw new IllegalStateException();
         }
     }
+    public boolean isGetAllPartnersByNameAndCountryAllowed() {
+        return isLinkAvailable(PartnerRelTypes.GET_ALL_PARTNERS_BY_NAME_AND_COUNTRY);
+    }
+    public void getAllPartnersByNameAndCountry(String name, String country) throws IOException {
+        if (isGetAllPartnersByNameAndCountryAllowed()) {
+            var url = getUrl(PartnerRelTypes.GET_ALL_PARTNERS_BY_NAME_AND_COUNTRY);
+            url = url.replace("{NAME}", name);
+            url = url.replace("{COUNTRY}", country);
+            processResponse(
+                    this.partnerWebClient.getCollectionOfPartner(url),
+                    (response) -> {
+                        this.currentPartnerData = new LinkedList<>(response.getResponseData());
+                        this.cursorPartnerData = 0;
+                    }
+            );
+        } else {
+            throw new IllegalStateException();
+        }
+    }
     public void getNextPartnerPage() throws IOException {
         // TODO: theoretically here should also be checked,
         //  if the location header is actually points the Partner type
@@ -300,7 +319,8 @@ public class ManagerRestClient extends AbstractRestClient {
         }
     }
     private void getSingleModuleOfPartner(int index) throws IOException {
-        getSingleModuleOfPartner(this.currentModuleData.get(index).getSelfLink().getUrl());
+//        getSingleModuleOfPartner(this.currentModuleData.get(index).getSelfLink().getUrl());
+        getSingleModuleOfPartner(this.currentModuleData.get(index).getSelfLinkOnSecond().getUrl());
     }
     private void getSingleModuleOfPartner(String url) throws IOException {
         processResponse(

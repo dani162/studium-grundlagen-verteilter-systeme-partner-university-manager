@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonRootName;
 import de.fhws.fiw.fds.manager.server.api.states.partner_modules.ModuleOfPartnerUri;
 import de.fhws.fiw.fds.sutton.server.api.hyperlinks.Link;
+import de.fhws.fiw.fds.sutton.server.api.hyperlinks.annotations.SecondarySelfLink;
 import de.fhws.fiw.fds.sutton.server.api.hyperlinks.annotations.SelfLink;
 import de.fhws.fiw.fds.sutton.server.models.AbstractModel;
 
@@ -13,6 +14,12 @@ public class Module extends AbstractModel {
     private String name;
     private int SemesterType;
     private float numberOfCreditPoints;
+
+    @SecondarySelfLink(
+            primaryPathElement = "partners",
+            secondaryPathElement = "modules"
+    )
+    private transient Link selfLinkOnSecond;
 
     @SelfLink(pathElement = ModuleOfPartnerUri.PATH_ELEMENT)
     private transient Link selfLink;
@@ -57,5 +64,14 @@ public class Module extends AbstractModel {
     public void setSelfLink(Link selfLink) {
         this.selfLink = selfLink;
     }
+
+    public Link getSelfLinkOnSecond() {
+        return selfLinkOnSecond;
+    }
+
+    public void setSelfLinkOnSecond(Link selfLinkOnSecond) {
+        this.selfLinkOnSecond = selfLinkOnSecond;
+    }
+
     //</editor-fold>
 }
