@@ -371,12 +371,15 @@ public class TestManagerAppIT {
                     //<editor-fold desc="UpdatePartner">
                     String oldName;
                     String newName;
+                    String newCountry;
                     @BeforeEach()
                     public void setup() throws IOException {
                         var partner = client.partnerData().getFirst();
                         oldName = partner.getName();
                         newName = "Some Special Non Existing University \uD83E\uDDC0";
+                        newCountry = "Some non exiting country";
                         partner.setName(newName);
+                        partner.setCountry(newCountry);
                         client.updatePartner(partner);
                     }
 
@@ -404,6 +407,37 @@ public class TestManagerAppIT {
                             assertEquals(newName, client.partnerData().getFirst().getName());
                         }
                         //</editor-fold>
+
+                        @Nested
+                        class GetAllPartner {
+                            @BeforeEach
+                            public void setup() throws IOException {
+                                client.getAllPartners();
+                            }
+
+                            @Test
+                            public void filter_partner_allowed() {
+                                assertTrue(client.isGetAllPartnersByNameAndCountryAllowed());
+                            }
+
+                            @Test
+                            public void shouldContain20Entries() {
+                                assertEquals(20, client.partnerData().size());
+                            }
+
+                            @Nested
+                            class GetAllPartnerFiltered {
+                                @BeforeEach
+                                public void setup() throws IOException {
+                                    client.getAllPartnersByNameAndCountry("", newCountry);
+                                }
+
+                                @Test
+                                public void shouldContain20Entries() {
+                                    assertEquals(1, client.partnerData().size());
+                                }
+                            }
+                        }
                     }
                 }
             }

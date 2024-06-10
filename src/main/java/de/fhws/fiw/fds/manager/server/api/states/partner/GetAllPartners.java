@@ -17,6 +17,6 @@ public class GetAllPartners extends AbstractGetCollectionState<Response, Partner
     @Override
     protected void defineTransitionLinks() {
         addLink(PartnerUri.REL_PATH, PartnerRelTypes.CREATE_PARTNER, getAcceptRequestHeader());
-        addLink(PartnerUri.REL_PATH + "?name={NAME}&country={COUNTRY}", getAcceptRequestHeader());
+        addLink(PartnerUri.REL_PATH + "?name={NAME}&country={COUNTRY}", PartnerRelTypes.GET_ALL_PARTNERS_BY_NAME_AND_COUNTRY, getAcceptRequestHeader());
     }
 }
