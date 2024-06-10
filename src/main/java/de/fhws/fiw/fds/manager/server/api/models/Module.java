@@ -6,6 +6,8 @@ import de.fhws.fiw.fds.manager.server.api.states.partner_modules.ModuleOfPartner
 import de.fhws.fiw.fds.sutton.server.api.hyperlinks.Link;
 import de.fhws.fiw.fds.sutton.server.api.hyperlinks.annotations.SecondarySelfLink;
 import de.fhws.fiw.fds.sutton.server.api.hyperlinks.annotations.SelfLink;
+import de.fhws.fiw.fds.sutton.server.api.serviceAdapters.Exceptions.SuttonWebAppException;
+import de.fhws.fiw.fds.sutton.server.api.serviceAdapters.responseAdapter.Status;
 import de.fhws.fiw.fds.sutton.server.models.AbstractModel;
 
 @JsonRootName("module")
@@ -23,6 +25,10 @@ public class Module extends AbstractModel {
 
     @SelfLink(pathElement = ModuleOfPartnerUri.PATH_ELEMENT)
     private transient Link selfLink;
+
+    public void validate() throws SuttonWebAppException {
+        if (this.numberOfCreditPoints < 0) throw new SuttonWebAppException(Status.BAD_REQUEST, "numberOfCreditPoints should be greater than zero");
+    }
 
     public Module() {}
 

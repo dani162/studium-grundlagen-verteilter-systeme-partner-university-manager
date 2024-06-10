@@ -364,6 +364,23 @@ public class TestManagerAppIT {
                             }
                         }
                     }
+
+                    @Nested
+                    class TestCreatePartnerInvalidNumberOfSendStudents {
+                        //<editor-fold desc="TestCreatePartnerInvalidNumberOfSendStudents">
+                        @BeforeEach()
+                        public void setup() throws IOException {
+                            var sampleModule = getSampleModuleOfPartner();
+                            sampleModule.setNumberOfCreditPoints(-1);
+                            client.createModuleOfPartner(sampleModule);
+                        }
+
+                        @Test
+                        public void client_error() {
+                            assertEquals(400, client.getLastStatusCode());
+                        }
+                        //</editor-fold>
+                    }
                 }
 
                 @Nested
@@ -570,6 +587,40 @@ public class TestManagerAppIT {
                     }
                 }
             }
+
+            @Nested
+            class TestCreatePartnerInvalidNumberOfSendStudents {
+                //<editor-fold desc="TestCreatePartnerInvalidNumberOfSendStudents">
+                @BeforeEach()
+                public void setup() throws IOException {
+                    var samplePartner = getSamplePartner();
+                    samplePartner.setNumberOfSendableStudents(-1);
+                    client.createPartner(samplePartner);
+                }
+
+                @Test
+                public void client_error() {
+                    assertEquals(400, client.getLastStatusCode());
+                }
+                //</editor-fold>
+            }
+
+            @Nested
+            class TestCreatePartnerInvalidNumberOfAcceptStudents {
+                //<editor-fold desc="TestCreatePartnerInvalidNumberOfAcceptStudents">
+                @BeforeEach()
+                public void setup() throws IOException {
+                    var samplePartner = getSamplePartner();
+                    samplePartner.setNumberOfAcceptableStudents(-1);
+                    client.createPartner(samplePartner);
+                }
+
+                @Test
+                public void client_error() {
+                    assertEquals(400, client.getLastStatusCode());
+                }
+                //</editor-fold>
+            }
         }
     }
 
@@ -603,6 +654,7 @@ public class TestManagerAppIT {
     public ModuleModel getSampleModuleOfPartner() {
         var module = new ModuleModel();
         module.setName(faker.job().field());
+        module.setSemesterType(2);
         module.setNumberOfCreditPoints(5);
         return module;
     }

@@ -7,6 +7,8 @@ import de.fhws.fiw.fds.manager.server.api.states.partner_modules.ModuleOfPartner
 import de.fhws.fiw.fds.manager.server.api.states.partner_modules.ModuleOfPartnerUri;
 import de.fhws.fiw.fds.sutton.server.api.hyperlinks.Link;
 import de.fhws.fiw.fds.sutton.server.api.hyperlinks.annotations.SuttonLink;
+import de.fhws.fiw.fds.sutton.server.api.serviceAdapters.Exceptions.SuttonWebAppException;
+import de.fhws.fiw.fds.sutton.server.api.serviceAdapters.responseAdapter.Status;
 import de.fhws.fiw.fds.sutton.server.models.AbstractModel;
 
 import java.time.LocalDate;
@@ -28,6 +30,12 @@ public class Partner extends AbstractModel {
     private transient Link selfLink;
     @SuttonLink(value = PartnerUri.PATH_ELEMENT + "/${id}/" + ModuleOfPartnerUri.PATH_ELEMENT, rel = ModuleOfPartnerRelTypes.GET_ALL_MODULES_OF_PARTNER)
     private transient Link modules;
+
+
+    public void validate() throws SuttonWebAppException {
+        if (this.numberOfSendableStudents < 0) throw new SuttonWebAppException(Status.BAD_REQUEST, "numberOfSendableStudents should be greater than zero");
+        if (this.numberOfAcceptableStudents < 0) throw new SuttonWebAppException(Status.BAD_REQUEST, "numberOfAcceptableStudents should be greater than zero");
+    }
 
     public Partner() {}
 

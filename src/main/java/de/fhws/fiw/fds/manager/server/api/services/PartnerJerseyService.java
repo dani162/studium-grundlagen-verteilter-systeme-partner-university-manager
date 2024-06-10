@@ -48,6 +48,7 @@ public class PartnerJerseyService extends AbstractJerseyService {
     @Produces({MediaType.APPLICATION_JSON})
     public Response createSinglePartner(final Partner partnerModel) {
         try {
+            partnerModel.validate();
             return new PostNewPartner(this.serviceContext, partnerModel).execute();
         } catch (SuttonWebAppException e) {
             throw new WebApplicationException(Response.status(e.getStatus().getCode())
@@ -60,6 +61,7 @@ public class PartnerJerseyService extends AbstractJerseyService {
     @Produces({MediaType.APPLICATION_JSON})
     public Response updateSinglePartner(@PathParam("id") final long id, final Partner partnerModel) {
         try {
+            partnerModel.validate();
             return new PutSinglePartner(this.serviceContext, id, partnerModel).execute();
         } catch (SuttonWebAppException e) {
             throw new WebApplicationException(Response.status(e.getStatus().getCode())
@@ -125,6 +127,7 @@ public class PartnerJerseyService extends AbstractJerseyService {
             final Module module
     ) {
         try {
+            module.validate();
             return new PostNewModuleOfPartner(this.serviceContext, partnerId, module).execute();
         } catch (SuttonWebAppException e) {
             throw new WebApplicationException(Response
@@ -143,6 +146,7 @@ public class PartnerJerseyService extends AbstractJerseyService {
             final Module module
     ) {
         try {
+            module.validate();
             return new PutSingleModuleOfPartner(this.serviceContext, partnerId, moduleId, module).execute();
         } catch (SuttonWebAppException e) {
             throw new WebApplicationException(Response.status(e.getStatus().getCode())
