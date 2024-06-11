@@ -450,7 +450,12 @@ public class TestManagerAppIT {
                                 }
 
                                 @Test
-                                public void shouldContain20Entries() {
+                                public void ok() {
+                                    assertEquals(200, client.getLastStatusCode());
+                                }
+
+                                @Test
+                                public void shouldContain1Entries() {
                                     assertEquals(1, client.partnerData().size());
                                 }
                             }

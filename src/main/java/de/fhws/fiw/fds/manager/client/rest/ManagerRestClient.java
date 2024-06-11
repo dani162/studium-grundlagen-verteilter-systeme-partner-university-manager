@@ -11,6 +11,8 @@ import de.fhws.fiw.fds.manager.server.api.states.partner_modules.ModuleOfPartner
 import de.fhws.fiw.fds.sutton.client.rest2.AbstractRestClient;
 
 import java.io.IOException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -100,8 +102,8 @@ public class ManagerRestClient extends AbstractRestClient {
     public void getAllPartnersByNameAndCountry(String name, String country) throws IOException {
         if (isGetAllPartnersByNameAndCountryAllowed()) {
             var url = getUrl(PartnerRelTypes.GET_ALL_PARTNERS_BY_NAME_AND_COUNTRY);
-            url = url.replace("{NAME}", name);
-            url = url.replace("{COUNTRY}", country);
+            url = url.replace("{NAME}", URLEncoder.encode(name, StandardCharsets.UTF_8));
+            url = url.replace("{COUNTRY}", URLEncoder.encode(country, StandardCharsets.UTF_8));
             processResponse(
                     this.partnerWebClient.getCollectionOfPartner(url),
                     (response) -> {
