@@ -91,9 +91,47 @@ public class ManagerRestClient extends AbstractRestClient {
     public boolean isGetAllPartnersByNameAndCountryAllowed() {
         return isLinkAvailable(PartnerRelTypes.GET_ALL_PARTNERS_BY_NAME_AND_COUNTRY);
     }
+    public boolean isGetAllPartnersByNameAndCountryAllowedAsc() {
+        return isLinkAvailable(PartnerRelTypes.GET_ALL_PARTNERS_BY_NAME_AND_COUNTRY_ASC);
+    }
+    public boolean isGetAllPartnersByNameAndCountryAllowedDesc() {
+        return isLinkAvailable(PartnerRelTypes.GET_ALL_PARTNERS_BY_NAME_AND_COUNTRY_DESC);
+    }
     public void getAllPartnersByNameAndCountry(String name, String country) throws IOException {
         if (isGetAllPartnersByNameAndCountryAllowed()) {
             var url = getUrl(PartnerRelTypes.GET_ALL_PARTNERS_BY_NAME_AND_COUNTRY);
+            url = url.replace("{NAME}", name);
+            url = url.replace("{COUNTRY}", country);
+            processResponse(
+                    this.partnerWebClient.getCollectionOfPartner(url),
+                    (response) -> {
+                        this.currentPartnerData = new LinkedList<>(response.getResponseData());
+                        this.cursorPartnerData = 0;
+                    }
+            );
+        } else {
+            throw new IllegalStateException();
+        }
+    }
+    public void getAllPartnersByNameAndCountryAsc(String name, String country) throws IOException {
+        if (isGetAllPartnersByNameAndCountryAllowedAsc()) {
+            var url = getUrl(PartnerRelTypes.GET_ALL_PARTNERS_BY_NAME_AND_COUNTRY_ASC);
+            url = url.replace("{NAME}", name);
+            url = url.replace("{COUNTRY}", country);
+            processResponse(
+                    this.partnerWebClient.getCollectionOfPartner(url),
+                    (response) -> {
+                        this.currentPartnerData = new LinkedList<>(response.getResponseData());
+                        this.cursorPartnerData = 0;
+                    }
+            );
+        } else {
+            throw new IllegalStateException();
+        }
+    }
+    public void getAllPartnersByNameAndCountryDsc(String name, String country) throws IOException {
+        if (isGetAllPartnersByNameAndCountryAllowedDesc()) {
+            var url = getUrl(PartnerRelTypes.GET_ALL_PARTNERS_BY_NAME_AND_COUNTRY_DESC);
             url = url.replace("{NAME}", name);
             url = url.replace("{COUNTRY}", country);
             processResponse(

@@ -2,7 +2,7 @@ package de.fhws.fiw.fds.manager.server.api.services;
 
 import de.fhws.fiw.fds.manager.server.api.models.Module;
 import de.fhws.fiw.fds.manager.server.api.models.Partner;
-import de.fhws.fiw.fds.manager.server.api.queries.QueryByPartnerNameAndCountry;
+import de.fhws.fiw.fds.manager.server.api.queries.QueryByPartnerNameAndCountryAndOrder;
 import de.fhws.fiw.fds.manager.server.api.queries.QueryModuleOfPartner;
 import de.fhws.fiw.fds.manager.server.api.states.partner.*;
 import de.fhws.fiw.fds.manager.server.api.states.partner_modules.*;
@@ -19,12 +19,13 @@ public class PartnerJerseyService extends AbstractJerseyService {
     public Response getAllPartners(
             @DefaultValue("") @QueryParam("name") final String partnerName,
             @DefaultValue("") @QueryParam("country") final String country,
+            @DefaultValue("") @QueryParam("order") final String order,
             @DefaultValue("0") @QueryParam("offset") int offset,
             @DefaultValue("20") @QueryParam("size") int size
     ) {
         try {
             return new GetAllPartners(this.serviceContext,
-                    new QueryByPartnerNameAndCountry<>(partnerName, country, offset, size)).execute();
+                    new QueryByPartnerNameAndCountryAndOrder<>(partnerName, country, order, offset, size)).execute();
         } catch (SuttonWebAppException e) {
             throw new WebApplicationException(e.getExceptionMessage(), e.getStatus().getCode());
         }
