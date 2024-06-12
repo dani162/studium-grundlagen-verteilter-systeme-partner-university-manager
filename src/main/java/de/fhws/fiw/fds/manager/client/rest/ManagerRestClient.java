@@ -178,9 +178,6 @@ public class ManagerRestClient extends AbstractRestClient {
         }
     }
     public List<PartnerModel> partnerData() {
-        if (this.currentPartnerData.isEmpty()) {
-            throw new IllegalStateException();
-        }
         return this.currentPartnerData;
     }
 
@@ -334,9 +331,6 @@ public class ManagerRestClient extends AbstractRestClient {
         }
     }
     public List<ModuleModel> moduleOfPartnerData() {
-        if (this.currentModuleData.isEmpty()) {
-            throw new IllegalStateException();
-        }
         return this.currentModuleData;
     }
 

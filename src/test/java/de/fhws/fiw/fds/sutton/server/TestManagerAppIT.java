@@ -187,10 +187,7 @@ public class TestManagerAppIT {
 
                     @Test
                     public void module_of_partner_data_collection_empty() {
-                        assertThrows(
-                                IllegalStateException.class,
-                                () -> client.moduleOfPartnerData()
-                        );
+                        assertTrue(client.moduleOfPartnerData().isEmpty());
                     }
                     //</editor-fold>
 
@@ -274,10 +271,7 @@ public class TestManagerAppIT {
 
                                     @Test
                                     public void module_of_partner_collection_empty() {
-                                        assertThrows(
-                                                IllegalStateException.class,
-                                                () -> client.moduleOfPartnerData()
-                                        );
+                                        assertTrue(client.moduleOfPartnerData().isEmpty());
                                     }
                                     //</editor-fold>
                                 }
@@ -480,10 +474,7 @@ public class TestManagerAppIT {
 
             @Test
             public void partner_collection_empty() {
-                assertThrows(
-                        IllegalStateException.class,
-                        () -> client.partnerData()
-                );
+                assertTrue(client.partnerData().isEmpty());
             }
             //</editor-fold>
 
@@ -557,10 +548,7 @@ public class TestManagerAppIT {
 
                             @Test
                             public void partner_collection_empty() {
-                                assertThrows(
-                                        IllegalStateException.class,
-                                        () -> client.partnerData()
-                                );
+                                assertTrue(client.partnerData().isEmpty());
                             }
                             //</editor-fold>
                         }
