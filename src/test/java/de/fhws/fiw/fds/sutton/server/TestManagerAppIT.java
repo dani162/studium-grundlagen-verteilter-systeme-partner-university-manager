@@ -617,6 +617,82 @@ public class TestManagerAppIT {
         }
 
         @Nested
+        class CreatePartnerOrderingMultiPage {
+            String name1 = "ZZZZZZZZZZZZ";
+            String name2 = "AAAAAAAAAAAA";
+            @BeforeEach()
+            public void setup() throws IOException {
+                var extraClient1 = new ManagerRestClient();
+                extraClient1.start();
+                extraClient1.getAllPartners();
+                var person1 = getSamplePartner();
+                person1.setName(name1);
+                extraClient1.createPartner(person1);
+
+                var extraClient2 = new ManagerRestClient();
+                extraClient2.start();
+                extraClient2.getAllPartners();
+                var person2 = getSamplePartner();
+                person2.setName(name2);
+                extraClient2.createPartner(person2);
+
+                addExamplePartners(20);
+
+                client.getAllPartners();
+            }
+
+            @Test
+            public void ok() {
+                assertEquals(200, client.getLastStatusCode());
+            }
+
+            @Test
+            public void ascAllowed() {
+                assertTrue(client.isGetAllPartnersByNameAndCountryAllowedAsc());
+            }
+            @Test
+            public void descAllowed() {
+                assertTrue(client.isGetAllPartnersByNameAndCountryAllowedDesc());
+            }
+
+            @Nested
+            class Asc {
+                @BeforeEach()
+                public void setup() throws IOException {
+                    client.getAllPartnersByNameAndCountryAsc("", "");
+                }
+
+                @Test
+                public void name2ShouldBeFirst() {
+                    assertEquals(name2, client.partnerData().getFirst().getName());
+                }
+                @Test
+                public void name1ShouldBeSecond() throws IOException {
+                    client.getNextPartnerPage();
+                    assertEquals(name1, client.partnerData().get(1).getName());
+                }
+            }
+
+            @Nested
+            class Desc {
+                @BeforeEach()
+                public void setup() throws IOException {
+                    client.getAllPartnersByNameAndCountryDsc("", "");
+                }
+
+                @Test
+                public void name1ShouldBeFirst() {
+                    assertEquals(name1, client.partnerData().getFirst().getName());
+                }
+                @Test
+                public void name2ShouldBeSecond() throws IOException {
+                    client.getNextPartnerPage();
+                    assertEquals(name2, client.partnerData().get(1).getName());
+                }
+            }
+        }
+
+        @Nested
         class CreatePartnerOrdering {
             String name1 = "Ich will nicht mehr. \uD83D\uDE42\uD83D\uDE43\uD83D\uDE42\uD83D\uDD2B";
             String name2 = "ABC";

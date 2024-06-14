@@ -22,26 +22,12 @@ public class QueryByPartnerNameAndCountryAndOrder<R> extends AbstractQuery<R, Pa
 
     @Override
     protected CollectionModelResult<Partner> doExecuteQuery(SearchParameter searchParameter) throws DatabaseException {
-        var reschult = DaoFactory.getInstance().getPartnerDao().readByPartnerNameAndCountry(
+        searchParameter.setOrderByAttribute(this.order);
+        return DaoFactory.getInstance().getPartnerDao().readByPartnerNameAndCountry(
                 this.partnerName,
                 this.country,
                 searchParameter
         );
-
-        var dadaRef = reschult.getResult();
-        var sortedDada = reschult.getResult().stream().sorted((a, b) -> {
-           if (this.order.equalsIgnoreCase("asc"))
-               return a.getName().compareToIgnoreCase(b.getName());
-           else if (this.order.equalsIgnoreCase("desc"))
-               return b.getName().compareToIgnoreCase(a.getName());
-           else
-               return 0;
-        }).toList();
-
-        dadaRef.clear();
-        dadaRef.addAll(sortedDada);
-
-        return reschult;
     }
 
     //<editor-fold desc="getter & setter">
