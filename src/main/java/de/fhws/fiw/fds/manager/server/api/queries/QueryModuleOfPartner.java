@@ -16,6 +16,6 @@ public class QueryModuleOfPartner<R> extends AbstractRelationQuery<R, Module> {
 
     @Override
     protected CollectionModelResult<Module> doExecuteQuery(SearchParameter searchParameter) throws DatabaseException {
-        return DaoFactory.getInstance().getModuleOfPartnerDao().readAllLinked(this.primaryId);
+        return DaoFactory.getInstance().getModuleOfPartnerDao().readAllLinked(this.primaryId, searchParameter);
     }
 }

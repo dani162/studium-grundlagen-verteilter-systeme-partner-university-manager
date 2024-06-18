@@ -578,6 +578,110 @@ public class TestManagerAppIT {
                         }
                         //</editor-fold>
                     }
+
+                    @Nested
+                    class CreateModules {
+                        @BeforeEach
+                        public void setup() throws IOException {
+                            addExampleModules(53);
+                        }
+
+                        @Nested
+                        class GetAllModules {
+
+                            @BeforeEach
+                            public void setup() throws IOException {
+                                client.getAllModulesOfPartner();
+                            }
+
+                            @Test
+                            public void next_page_allowed() {
+                                assertTrue(client.hasNextPage());
+                            }
+                            @Test
+                            public void prev_page_disallowed() {
+                                assertFalse(client.hasPrevPage());
+                            }
+                            //</editor-fold>
+
+                            @Nested
+                            class GetNextModulePage1 {
+                                //<editor-fold desc="GetNextModulePage1">
+                                @BeforeEach()
+                                public void setup() throws IOException {
+                                    client.getNextModuleOfPartnerPage();
+                                }
+
+                                @Test
+                                public void next_page_allowed() {
+                                    assertTrue(client.hasNextPage());
+                                }
+                                @Test
+                                public void prev_page_disallowed() {
+                                    assertTrue(client.hasPrevPage());
+                                }
+                                //</editor-fold>
+
+                                @Nested
+                                class GetNextModulePage2 {
+                                    //<editor-fold desc="GetNextModulePage2">
+                                    @BeforeEach()
+                                    public void setup() throws IOException {
+                                        client.getNextModuleOfPartnerPage();
+                                    }
+
+                                    @Test
+                                    public void next_page_allowed() {
+                                        assertFalse(client.hasNextPage());
+                                    }
+                                    @Test
+                                    public void prev_page_disallowed() {
+                                        assertTrue(client.hasPrevPage());
+                                    }
+                                    //</editor-fold>
+
+
+                                    @Nested
+                                    class GetPrevModulePage1 {
+                                        //<editor-fold desc="GetPrevModulePage1">
+                                        @BeforeEach()
+                                        public void setup() throws IOException {
+                                            client.getPrevModuleOfPartnerPage();
+                                        }
+
+                                        @Test
+                                        public void next_page_allowed() {
+                                            assertTrue(client.hasNextPage());
+                                        }
+                                        @Test
+                                        public void prev_page_disallowed() {
+                                            assertTrue(client.hasPrevPage());
+                                        }
+                                        //</editor-fold>
+
+                                        @Nested
+                                        class GetPrevModulePage0 {
+                                            //<editor-fold desc="GetPrevModulePage0">
+                                            @BeforeEach()
+                                            public void setup() throws IOException {
+                                                client.getPrevModuleOfPartnerPage();
+                                            }
+
+                                            @Test
+                                            public void next_page_allowed() {
+                                                assertTrue(client.hasNextPage());
+                                            }
+                                            @Test
+                                            public void prev_page_disallowed() {
+                                                assertFalse(client.hasPrevPage());
+                                            }
+                                            //</editor-fold>
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
             }
 
@@ -798,6 +902,17 @@ public class TestManagerAppIT {
         module.setSemesterType(2);
         module.setNumberOfCreditPoints(5);
         return module;
+    }
+
+    public void addExampleModules(int amount) throws IOException {
+        for (int i = 0; i < amount; i ++) {
+            var extraClient = new ManagerRestClient();
+            extraClient.start();
+            extraClient.getAllPartners();
+            extraClient.getSinglePartner();
+            extraClient.getAllModulesOfPartner();
+            extraClient.createModuleOfPartner(getSampleModuleOfPartner());
+        }
     }
     //</editor-fold>
 }
